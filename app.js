@@ -1,22 +1,15 @@
-const fs = require('fs');
+const fs = require('fs'); // This line can be removed if not used elsewhere
 const { Pool } = require('pg');
 
-// Read the password from the secret file
-const password = fs.readFileSync(process.env.POSTGRES_PASSWORD, 'utf8').trim();
-
-// Construct the database URL
-const dbUser  = process.env.DB_USER;
-const dbHost = process.env.DB_HOST;
-const dbPort = process.env.DB_PORT;
-const dbName = process.env.DB_NAME;
-
-const connectionString = `postgres://${dbUser }:${password}@${dbHost}:${dbPort}/${dbName}`;
-
+// Use environment variables for database connection
 const pool = new Pool({
-  connectionString: connectionString,
+  user: process.env.DB_USER,       // Should be 'myhunter'
+  password: process.env.DB_PASSWORD, // Should be 'esketit'
+  host: process.env.DB_HOST,       // Should be 'postgres'
+  port: process.env.DB_PORT,       // Should be '5432'
+  database: process.env.DB_NAME,   // Should be 'mydatabase'
 });
 
-// Your existing connection logic...
 const checkConnection = async () => {
   try {
     const client = await pool.connect();
