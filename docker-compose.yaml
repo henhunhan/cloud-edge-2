@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_USER=user
+      - POSTGRES_PASSWORD
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=mydatabase
+    depends_on:
+      - postgres
+    networks:
+      - private
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: /run/secrets/pg_password
+      POSTGRES_DB: mydatabase
+    secrets:
+      - pg_password
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - private
+    ports:
+      - "5432:5432"
+
+secrets:
+  pg_password:
+    file: ./pg_password.txt
+
+volumes:
+  postgres-data:
+
+networks:
+  private:
