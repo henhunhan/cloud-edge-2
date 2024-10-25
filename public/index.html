@@ -1,0 +1,51 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudEdge2</title>
+</head>
+<body>
+    <button>
+        TEKAN INI
+    </button>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bounty Tracker</title>
+</head>
+<body>
+    <h1>Bounty Data</h1>
+    <form id="dataForm">
+        <input type="text" name="priority" placeholder="Enter priority" required>
+        <input type="text" name="task" placeholder="Enter task" required>
+        <button type="submit">Add Bounty</button>
+    </form>
+    <button id="fetchData">Show All Bounties</button>
+    <pre id="dataDisplay"></pre>
+    <script>
+        document.getElementById('dataForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            const priority = formData.get('priority');
+            const task = formData.get('task');
+            await fetch('/api/bounty', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ priority, task })
+            });
+            e.target.reset();
+        };
+
+        document.getElementById('fetchData').onclick = async () => {
+            const response = await fetch('/api/bounty');
+            const data = await response.json();
+            document.getElementById('dataDisplay').textContent = JSON.stringify(data, null, 2);
+        };
+    </script>
+</body>
+</html>
